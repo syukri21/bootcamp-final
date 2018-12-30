@@ -48,7 +48,15 @@ class Cart extends Component {
 	}
 
 	static navigationOptions = {
-		title: 'Cart'
+		title: 'YOUR CART',
+		headerRight: <Icon active name='md-cart' style={{ color: '#FFFFFF', marginRight: 30 }} />,
+		headerStyle: {
+			backgroundColor: '#f4511e'
+		},
+		headerTintColor: '#fff',
+		headerTitleStyle: {
+			fontWeight: 'bold'
+		}
 	};
 
 	getData = (item, type) => {
@@ -66,6 +74,7 @@ class Cart extends Component {
 		});
 
 		if (this.state.total === 0) {
+			alert('Your dont have any transcation, please add item to cart !');
 			return;
 		}
 
@@ -98,8 +107,16 @@ class Cart extends Component {
 							.map((e) => <CartItem key={e.id} e={e} {...this.props} />)}
 					</List>
 				</Content>
-				<View style={{ flexDirection: 'row', justifyContent: 'center', padding: 20 }}>
-					<Button onPress={this.handleSubmit}>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'center',
+						padding: 20,
+						backgroundColor: '#F4501C'
+					}}
+				>
+					<Button full onPress={this.handleSubmit} light vertical transparent>
+						<Icon active name='md-cash' />
 						<Text>SUBMIT TRANSACTION</Text>
 					</Button>
 				</View>

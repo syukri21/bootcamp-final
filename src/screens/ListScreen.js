@@ -45,18 +45,21 @@ class ListScreen extends Component {
 		this.props.dispatch(ALL_PRODUCTS());
 	}
 
-	handleAddCart = (data) => () => {
+	handleAddCart = (data) => async () => {
 		let newData = {
 			product_id: data.id,
 			qty: 1,
 			price: data.price
 		};
 
-		this.props.dispatch(ADD_ORDER(newData));
+		await this.props.dispatch(ADD_ORDER(newData));
+
+		alert('This item added to chart :)');
 	};
 
 	static navigationOptions = {
-		title: 'Daftar Belanja',
+		title: 'SHOPPING LIST',
+		headerLeft: <Icon active name='md-shirt' style={{ color: '#FFFFFF', marginLeft: 20 }} />,
 		headerStyle: {
 			backgroundColor: '#f4511e'
 		},
@@ -75,8 +78,7 @@ class ListScreen extends Component {
 			<Container>
 				<Content>
 					<List
-						leftOpenValue={75}
-						rightOpenValue={-75}
+						rightOpenValue={-130}
 						dataSource={this.ds.cloneWithRows(results)}
 						renderRow={(data) => (
 							<Card style={{ marginHorizontal: 10, flexDirection: 'row' }}>
@@ -85,10 +87,10 @@ class ListScreen extends Component {
 										cardBody
 										style={{
 											flexDirection: 'row',
-											marginTop: 10,
 											padding: 10,
 											alignItems: 'flex-start',
-											width: '100%'
+											width: '100%',
+											backgroundColor: '#BDE4F222'
 										}}
 									>
 										<View
@@ -112,11 +114,11 @@ class ListScreen extends Component {
 											</View>
 										</View>
 									</CardItem>
-									<CardItem style={{ backgroundColor: '#BDE4F288' }}>
+									<CardItem style={{ backgroundColor: '#BDE4F255' }}>
 										<Left>
 											<Button transparent>
-												<Icon active name='chatbubbles' />
-												<Text>4 Comments</Text>
+												<Icon active name='md-thumbs-up' />
+												<Text>{Math.round(Math.random() * 10)}</Text>
 											</Button>
 										</Left>
 									</CardItem>
@@ -129,11 +131,6 @@ class ListScreen extends Component {
 								</View>
 							</Card>
 						)}
-						renderLeftHiddenRow={(data) => (
-							<Button full onPress={() => alert(data)}>
-								<Icon active name='information-circle' />
-							</Button>
-						)}
 						renderRightHiddenRow={(data, secId, rowId, rowMap) => (
 							<Button full onPress={this.handleAddCart(data)}>
 								<Icon active name='add' />
@@ -141,9 +138,17 @@ class ListScreen extends Component {
 						)}
 					/>
 				</Content>
-				<View style={{ flexDirection: 'row', justifyContent: 'center', padding: 20 }}>
-					<Button style={{ marginRight: 10 }} onPress={() => this.props.navigation.navigate('Cart')}>
-						<Text>Cart</Text>
+				<View
+					style={{
+						flexDirection: 'row',
+						justifyContent: 'center',
+						padding: 20,
+						backgroundColor: '#F4501C'
+					}}
+				>
+					<Button full onPress={() => this.props.navigation.navigate('Cart')} light vertical transparent>
+						<Icon active name='md-cart' />
+						<Text>Go To Chart</Text>
 					</Button>
 				</View>
 			</Container>

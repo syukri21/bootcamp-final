@@ -15,12 +15,16 @@ import {
 	Left,
 	Body,
 	Right,
-	Input
+	Input,
+	Card,
+	CardItem
 } from 'native-base';
 import { connect } from 'react-redux';
 import { ALL_PRODUCTS } from '../redux/actions/product';
 import { ADD_ORDER, ALL_ORDERS, UPDATE_ORDER, DELETE_ORDER } from '../redux/actions/orders';
 import { _ } from 'lodash';
+import NumericInput from 'react-native-numeric-input';
+import { TouchableOpacity } from 'react-native';
 
 class CartItem extends React.Component {
 	constructor(props) {
@@ -33,11 +37,12 @@ class CartItem extends React.Component {
 		};
 	}
 
-	handleChangeText = (data) => (e) => {
-		this.setState({
-			qty: parseInt(e),
+	handleChangeText = (data) => async (e) => {
+		await this.setState({
+			qty: e,
 			price: parseInt(e) * parseInt(this.getData(data.product_id, 'price'))
 		});
+		this.handleUpdate(data.id);
 	};
 
 	getData = (item, type) => {
@@ -46,7 +51,7 @@ class CartItem extends React.Component {
 		}
 	};
 
-	handleUpdate = (id) => () => {
+	handleUpdate = (id) => {
 		data = {
 			qty: this.state.qty,
 			price: this.state.price
@@ -66,38 +71,82 @@ class CartItem extends React.Component {
 		const { e } = this.props;
 		if (!this.state.show) return <View />;
 		return (
-			<ListItem thumbnail ref={this.getRef}>
-				<Left>
-					<Thumbnail square source={{ uri: this.getData(e.product_id, 'image_url') }} />
-				</Left>
-				<Body>
-					<Text>{this.getData(e.product_id, 'name')}</Text>
-					<Text note numberOfLines={1}>
-						Harga : {'Rp, ' + this.state.price + '000'}
-					</Text>
-					<Text note numberOfLines={1}>
-						Qty : {this.state.qty}
-					</Text>
+			<Card thumbnail ref={this.getRef}>
+				<CardItem style={{ backgroundColor: '#007AFF' }}>
+					<Left>
+						<Text style={{ color: '#fff' }}>{this.getData(e.product_id, 'name')}</Text>
+					</Left>
+				</CardItem>
+				<CardItem>
+					<Left
+						style={{
+							backgroundColor: '#E9F6FB55',
+							flex: 0,
+							width: '30%',
+							height: 120,
+							position: 'relative'
+						}}
+					>
+						<Thumbnail
+							square
+							source={{ uri: this.getData(e.product_id, 'image_url') }}
+							style={{ flex: 1, height: 120 }}
+						/>
+						<TouchableOpacity
+							onPress={this.handleDelete(e.id)}
+							style={{ position: 'absolute', top: 0, left: -10 }}
+						>
+							<Icon style={{ color: '#D9544E', fontSize: 30 }} active name='md-close' />
+						</TouchableOpacity>
+					</Left>
+					<Body
+						style={{
+							justifyContent: 'center'
+						}}
+					>
+						<View>
+							<View style={{ flexDirection: 'row' }}>
+								<Icon
+									active
+									name='md-cart'
+									style={{ marginRight: 10, marginBottom: 10, color: '#D9544E' }}
+								/>
+								<Text numberOfLines={1} style={{ color: '#D9544E' }}>
+									{'Rp, ' + this.state.price + '000'}
+								</Text>
+							</View>
 
-					<Input
-						style={{ color: 'black', textAlign: 'center' }}
-						placeholderTextColor='gray'
-						placeholder='fill your quantity !'
-						onChangeText={this.handleChangeText(e)}
-					/>
-				</Body>
-				<Right>
-					<View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-						<Button onPress={this.handleUpdate(e.id)} small success style={{ marginBottom: 10 }}>
-							<Text>Update</Text>
-						</Button>
-						<Button onPress={this.handleDelete(e.id)} small danger>
-							<Text>Delete</Text>
-						</Button>
-					</View>
-				</Right>
-			</ListItem>
+							<Text style={{ color: '#82B649' }} note numberOfLines={1}>
+								Qty : {this.state.qty}
+							</Text>
+						</View>
+					</Body>
+					<Right style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+						<NumericInput
+							valueType='integer'
+							value={parseInt(this.state.qty)}
+							onChange={this.handleChangeText(e)}
+							minValue={0}
+							inputStyle={{
+								width: 40,
+								opacity: 0
+							}}
+						/>
+						<Text
+							style={{
+								position: 'absolute',
+								left: '50%',
+								textAlign: 'center',
+								transform: [ { translateX: -5 } ]
+							}}
+						>
+							{this.state.qty}
+						</Text>
+					</Right>
+				</CardItem>
+			</Card>
 		);
+		x;
 	}
 }
 
