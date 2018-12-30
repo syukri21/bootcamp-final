@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { AsyncStorage } from 'react-native';
 import { FlatList, TouchableHighlight } from 'react-native';
 import {
 	Container,
@@ -47,17 +48,29 @@ class Cart extends Component {
 		this.props.dispatch(ALL_ORDERS());
 	}
 
-	static navigationOptions = {
+	static navigationOptions = ({ navigation }) => ({
 		title: 'YOUR CART',
-		headerRight: <Icon active name='md-cart' style={{ color: '#FFFFFF', marginRight: 30 }} />,
+		headerLeft: <Icon active name='md-cart' style={{ color: '#FFFFFF', marginLeft: 20 }} />,
 		headerStyle: {
 			backgroundColor: '#f4511e'
 		},
 		headerTintColor: '#fff',
 		headerTitleStyle: {
 			fontWeight: 'bold'
-		}
-	};
+		},
+		headerRight: (
+			<Button
+				onPress={() => {
+					AsyncStorage.setItem('token', 'dwd');
+					navigation.navigate('Login');
+				}}
+				transparent
+				style={{ height: '100%' }}
+			>
+				<Icon active name='md-log-out' style={{ color: '#FFFFFF' }} />
+			</Button>
+		)
+	});
 
 	getData = (item, type) => {
 		if (item) {
@@ -66,6 +79,11 @@ class Cart extends Component {
 	};
 
 	handleSubmit = async () => {
+		const token = await AsyncStorage.getItem('token');
+		if (token.length < 6 && token) {
+			return this.props.navigation.navigate('Login');
+		}
+
 		await this.props.dispatch(ALL_ORDERS());
 
 		await this.setState({

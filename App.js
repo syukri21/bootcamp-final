@@ -10,6 +10,8 @@ import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import ListScreen from './src/screens/ListScreen';
 import Cart from './src/screens/Cart';
+import Login from './src/screens/Login';
+import Register from './src/screens/Register';
 import Detail from './src/screens/Detail';
 import { createBottomTabNavigator, BottomTabBar, createMaterialBottomTabNavigator } from 'react-navigation-tabs';
 
@@ -19,7 +21,9 @@ const AppNavigator = createStackNavigator(
 	{
 		ListScreen,
 		Cart,
-		Detail
+		Detail,
+		Login,
+		Register
 	},
 	{
 		initialRouteName: 'ListScreen'

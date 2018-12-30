@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, AsyncStorage } from 'react-native';
 import {
 	View,
 	Text,
@@ -31,17 +31,29 @@ class Detail extends React.Component {
 			this.props.dispatch(GET_TRANSACTION(parseInt(this.props.navigation.getParam('id', null))));
 		}
 	}
-	static navigationOptions = {
+	static navigationOptions = ({ navigation }) => ({
 		title: 'DETAIL TRANSACTION',
-		headerRight: <Icon active name='md-cash' style={{ color: '#FFFFFF', marginRight: 30 }} />,
+		headerLeft: <Icon active name='md-cash' style={{ color: '#FFFFFF', marginLeft: 20 }} />,
 		headerStyle: {
 			backgroundColor: '#f4511e'
 		},
 		headerTintColor: '#fff',
 		headerTitleStyle: {
 			fontWeight: 'bold'
-		}
-	};
+		},
+		headerRight: (
+			<Button
+				onPress={() => {
+					AsyncStorage.setItem('token', 'dwd');
+					navigation.navigate('Login');
+				}}
+				transparent
+				style={{ height: '100%' }}
+			>
+				<Icon active name='md-log-out' style={{ color: '#FFFFFF' }} />
+			</Button>
+		)
+	});
 
 	render() {
 		return (

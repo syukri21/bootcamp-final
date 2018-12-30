@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { ListView, Image } from 'react-native';
+import axios from 'axios';
+import { ListView, Image, AsyncStorage } from 'react-native';
+import { USER_LOGIN } from '../redux/actions/user';
 import {
 	Container,
 	Header,
@@ -41,7 +43,7 @@ class ListScreen extends Component {
 		};
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.props.dispatch(ALL_PRODUCTS());
 	}
 
@@ -57,7 +59,7 @@ class ListScreen extends Component {
 		alert('This item added to chart :)');
 	};
 
-	static navigationOptions = {
+	static navigationOptions = ({ navigation }) => ({
 		title: 'SHOPPING LIST',
 		headerLeft: <Icon active name='md-shirt' style={{ color: '#FFFFFF', marginLeft: 20 }} />,
 		headerStyle: {
@@ -66,8 +68,20 @@ class ListScreen extends Component {
 		headerTintColor: '#fff',
 		headerTitleStyle: {
 			fontWeight: 'bold'
-		}
-	};
+		},
+		headerRight: (
+			<Button
+				onPress={() => {
+					AsyncStorage.setItem('token', 'dwd');
+					navigation.navigate('Login');
+				}}
+				transparent
+				style={{ height: '100%' }}
+			>
+				<Icon active name='md-log-out' style={{ color: '#FFFFFF' }} />
+			</Button>
+		)
+	});
 
 	render() {
 		console.log(this.props);
